@@ -1,0 +1,12 @@
+h1. love-loader demo
+
+This is the demo for love-loader. In order to run it:
+
+* Download and install "LÖVE":http://love2d.org
+* Download an uncompress this repo in a local folder
+* Execute it with LÖVE:
+
+<pre>
+cd path/to/this/repo
+love .
+</pre>
