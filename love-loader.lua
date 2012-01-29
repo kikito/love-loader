@@ -96,7 +96,7 @@ else
   end
 
   local function killThreadIfDone(thread)
-    if #pending == 0 then
+    if not resourceBeingLoaded and #pending == 0 then
       thread:send("done", true)
       callbacks.finished()
     end
