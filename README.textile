@@ -2,6 +2,10 @@ h1. love-loader
 
 This is an utility lib for "LÖVE":http://love2d.org that loads resources (images, sounds) from the hard disk on a separate thread.
 
+This allows for "doing stuff" while resources are being loaded; for example, playing an animation. The fact that the blocking calls happen in a separate thread ensures that the animation is fluid, without blocking calls dropping the framerate.
+
+Version 1.0.0 of this lib only works with LÖVE 0.7.x . LÖVE 0.8.2 has backwards-incompatible changes on the way threads and fonts are managed.
+
 h1. Examples
 
 <pre>
@@ -31,6 +35,7 @@ end
 function love.draw()
   if finishedLoading then
     -- media contains the images and sounds. You can use them here safely now.
+    love.graphics.draw(images.rabbit, 100, 200)
   else -- not finishedLoading
     local percent = 0
     if loader.resourceCount ~= 0 then percent = loader.loadedCount / loader.resourceCount end
