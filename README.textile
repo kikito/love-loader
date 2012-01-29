@@ -4,7 +4,7 @@ This is an utility lib for "LÖVE":http://love2d.org that loads resources (image
 
 This allows for "doing stuff" while resources are being loaded; for example, playing an animation. The fact that the blocking calls happen in a separate thread ensures that the animation is fluid, without blocking calls dropping the framerate.
 
-Version 1.0.0 of this lib only works with LÖVE 0.7.x . LÖVE 0.8.2 has backwards-incompatible changes on the way threads and fonts are managed.
+Version 1.0.0 of this lib only works with LÖVE 0.7.x . LÖVE 0.8.x has backwards-incompatible changes on the way threads and fonts are managed.
 
 h1. Examples
 
