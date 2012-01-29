@@ -1,3 +1,16 @@
+The song on this folder is called "Astro Fusion", a MegaMan 9 remix done by OverClocked ReMix team in their album "Mega Man 9: Black in Blue". The author of this song is Joshua Morse.
+
+More information here:
+
+http://backinblue.ocremix.org/
+
+The song was transformed from MP3 to OGG since that last format works
+better with LÖVE (MP3 presents sound artifacts in some machines).
+
+
+General OverClocked Remix License below:
+
+
 OverClocked ReMix grants all parties a limited, non-exclusive, non-transferable, universal license to use, redistribute, incorporate into other works, and publicly perform OverClocked ReMixes as long as the following criteria are met:
 
 A.) No profit is made from the exercise of this license. This includes but is not limited to incorporation of OverClocked ReMixes into commercial works, charging or accepting more than the cost of the delivery means or medium(s) for redistributing OverClocked ReMixes, accepting donations and/or offering "Name Your Own Price" options for OverClocked ReMixes, or redistributing OverClocked ReMixes in the context of commercial advertisements. Live performance or playback of OverClocked ReMixes may occur in commercial, for-profit spaces such as stores, private clubs, or other gatherings, so long as no cost is explicitly associated with listening to them and no endorsement of the commercial entity by OverClocked ReMix can be inferred.
