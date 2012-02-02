@@ -1,4 +1,4 @@
--- love-loaver v1.1.0-beta (2012-02)
+-- love-loaver v1.1.0 (2012-02)
 -- Copyright (c) 2011 Enrique García Cota
 -- Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 -- The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -115,13 +115,12 @@ else
   local function requestNewResourceToThread(thread)
     resourceBeingLoaded = shift(pending)
     local requestKey = resourceKinds[resourceBeingLoaded.kind].requestKey
-    print(thread, requestKey, resourceBeingLoaded.requestParam)
     setInThread(thread, requestKey, resourceBeingLoaded.requestParam)
   end
 
   local function endThreadIfAllLoaded(thread)
     if not resourceBeingLoaded and #pending == 0 then
-      thread:send("done", true)
+      setInThread(thread,"done",true)
       callbacks.allLoaded()
     end
   end

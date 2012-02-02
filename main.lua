@@ -25,7 +25,10 @@ function love.update(dt)
 end
 
 function love.keypressed(key)
-  if key == 'escape' then love.event.push('q') end
+  if key == 'escape' then
+    local f = love.event.quit or love.event.push
+    f('q')
+  end
   if currentState.keypressed then
     currentState.keypressed(key)
   end
