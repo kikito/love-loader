@@ -26,4 +26,7 @@ end
 
 function love.keypressed(key)
   if key == 'escape' then love.event.push('q') end
+  if currentState.keypressed then
+    currentState.keypressed(key)
+  end
 end

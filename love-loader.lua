@@ -46,33 +46,33 @@ local resourceKinds = {
 
 -- compatibility with LÖVE v0.7.x and 0.8.x
 local function setInThread(thread, key, value)
-  local f = thread.send or thread.set
-  return f(thread, key, value)
+  local set = thread.set or thread.send
+  return set(thread, key, value)
 end
 
 local function getFromThread(thread, key)
-  local f = thread.receive or thread.get
-  return f(thread, key)
+  local get = thread.get or thread.receive
+  return get(thread, key)
 end
 
 local producer = love.thread.getThread('loader')
 
 if producer then
 
-  local request, resource
+  local requestParam, resource
   local done = false
 
   while not done do
 
     for _,kind in pairs(resourceKinds) do
-      request = getFromThread(producer, kind.requestKey)
-      if input then
-        resource = kind.constructor(request)
+      requestParam = getFromThread(producer, kind.requestKey)
+      if requestParam then
+        resource = kind.constructor(requestParam)
         setInThread(producer, kind.resourceKey, resource)
       end
     end
 
-    done = getFromThread(thread, "done")
+    done = getFromThread(producer, "done")
   end
 
 else
@@ -89,9 +89,9 @@ else
     return table.remove(t,1)
   end
 
-  local function newResource(kind, holder, key, input)
+  local function newResource(kind, holder, key, requestParam)
     pending[#pending + 1] = {
-      kind = kind, holder = holder, key = key, input = input
+      kind = kind, holder = holder, key = key, requestParam = requestParam
     }
   end
 
@@ -101,7 +101,7 @@ else
 
     local data, resource
     for name,kind in pairs(resourceKinds) do
-      data = getFromThread(thread, kind.outputName)
+      data = getFromThread(thread, kind.resourceKey)
       if data then
         resource = kind.postProcess and kind.postProcess(data, resourceBeingLoaded) or data
         resourceBeingLoaded.holder[resourceBeingLoaded.key] = resource
@@ -114,8 +114,9 @@ else
 
   local function requestNewResourceToThread(thread)
     resourceBeingLoaded = shift(pending)
-    local inputName = resourceKinds[resourceBeingLoaded.kind].inputName
-    setInThread(thread, inputName, resourceBeingLoaded.input)
+    local requestKey = resourceKinds[resourceBeingLoaded.kind].requestKey
+    print(thread, requestKey, resourceBeingLoaded.requestParam)
+    setInThread(thread, requestKey, resourceBeingLoaded.requestParam)
   end
 
   local function endThreadIfAllLoaded(thread)

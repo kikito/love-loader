@@ -43,7 +43,9 @@ function loadingState.start(media, finishCallback)
     loader.newImage(media.images, i, 'media/knoll.png')
   end
 
-  loader.newSource(media.sounds, 'astro_fusion', 'media/astro-fusion.ogg', 'stream')
+  loader.newSource(   media.sounds, 'astro_fusion', 'media/astro-fusion.ogg', 'stream')
+  loader.newSource(   media.sounds, 'space',        'media/space.ogg', 'stream')
+  loader.newSoundData(media.sounds, 'space2',       'media/space.ogg')
 
   print("started loading")
 

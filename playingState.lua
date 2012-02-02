@@ -40,11 +40,15 @@ end
 
 local playingState = {}
 
+local spaceSound, spaceSound2
+
 function playingState.start(media)
   love.audio.play(media.sounds.astro_fusion)
   for i=1,50 do
     knolls[i] = newKnoll(media.images[i])
   end
+  spaceSound = media.sounds.space
+  spaceSound2 = love.audio.newSource(media.sounds.space2)
 end
 
 function playingState.draw()
@@ -53,6 +57,11 @@ end
 
 function playingState.update(dt)
   for i=1,50 do updateKnoll(knolls[i], dt) end
+end
+
+function playingState.keypressed(key)
+  if key == ' '     then love.audio.play(spaceSound) end
+  if key == 'return' then love.audio.play(spaceSound2) end
 end
 
 return playingState
