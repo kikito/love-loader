@@ -1,4 +1,4 @@
--- love-loaver v1.1.1 (2012-02)
+-- love-loaver v1.1.2 (2012-04)
 -- Copyright (c) 2011 Enrique García Cota
 -- Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 -- The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -83,8 +83,7 @@ else
   local callbacks = {}
   local resourceBeingLoaded
 
-  local separator = _G.package.config:sub(1,1)
-  local pathToThisFile = (...):gsub("%.", separator) .. ".lua"
+  local pathToThisFile = (...):gsub("%.", "/") .. ".lua"
 
   local function shift(t)
     return table.remove(t,1)
