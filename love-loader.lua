@@ -46,13 +46,11 @@ local resourceKinds = {
 
 -- compatibility with LÖVE v0.7.x and 0.8.x
 local function setInThread(thread, key, value)
-  local set = thread.set or thread.send
-  return set(thread, key, value)
+  return (thread.set or thread.send)(thread, key, value)
 end
 
 local function getFromThread(thread, key)
-  local get = thread.get or thread.receive
-  return get(thread, key)
+  return (thread.get or thread.receive)(thread, key)
 end
 
 local producer = love.thread.getThread('loader')
