@@ -114,9 +114,9 @@ else
     channel:push(resourceBeingLoaded.requestParam)
   end
 
-  local function endThreadIfAllLoaded(thread)
+  local function endThreadIfAllLoaded()
     if not resourceBeingLoaded and #pending == 0 then
-      love.thread.getChannel("loader_is_done"):push(true)
+      love.thread.getChannel(CHANNEL_PREFIX .. "is_done"):push(true)
       callbacks.allLoaded()
     end
   end
