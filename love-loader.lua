@@ -84,10 +84,6 @@ else
   end
 
   local function newResource(kind, holder, key, requestParam)
-    assert(type(kind) == "string")
-    assert(type(holder) == "table")
-    assert(type(key) == "string")
-    assert(type(requestParam) == "string")
     pending[#pending + 1] = {
       kind = kind, holder = holder, key = key, requestParam = requestParam
     }
