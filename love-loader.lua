@@ -1,5 +1,5 @@
--- love-loader v1.1.2 (2012-04)
--- Copyright (c) 2011 Enrique García Cota
+-- love-loader v2.0.0 (2014-01)
+-- Copyright (c) 2011 Enrique García Cota, Tanner Rogalsky
 -- Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 -- The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -44,33 +44,28 @@ local resourceKinds = {
   }
 }
 
--- compatibility with LÖVE v0.7.x and 0.8.x
-local function setInThread(thread, key, value)
-  return (thread.set or thread.send)(thread, key, value)
-end
+local CHANNEL_PREFIX = "loader_"
 
-local function getFromThread(thread, key)
-  return (thread.get or thread.receive)(thread, key)
-end
-
-local producer = love.thread.getThread('loader')
-
-if producer then
-
+local loaded = ...
+if loaded == true then
   local requestParam, resource
   local done = false
+
+  local doneChannel = love.thread.getChannel(CHANNEL_PREFIX .. "is_done")
 
   while not done do
 
     for _,kind in pairs(resourceKinds) do
-      requestParam = getFromThread(producer, kind.requestKey)
+      local loader = love.thread.getChannel(CHANNEL_PREFIX .. kind.requestKey)
+      requestParam = loader:pop()
       if requestParam then
         resource = kind.constructor(requestParam)
-        setInThread(producer, kind.resourceKey, resource)
+        local producer = love.thread.getChannel(CHANNEL_PREFIX .. kind.resourceKey)
+        producer:push(resource)
       end
     end
 
-    done = getFromThread(producer, "done")
+    done = doneChannel:pop()
   end
 
 else
@@ -81,7 +76,8 @@ else
   local callbacks = {}
   local resourceBeingLoaded
 
-  local pathToThisFile = (...):gsub("%.", "/") .. ".lua"
+  local separator = _G.package.config:sub(1,1)
+  local pathToThisFile = (...):gsub("%.", separator) .. ".lua"
 
   local function shift(t)
     return table.remove(t,1)
@@ -93,13 +89,14 @@ else
     }
   end
 
-  local function getResourceFromThreadIfAvailable(thread)
-    local errorMessage = getFromThread(thread,"error")
+  local function getResourceFromThreadIfAvailable()
+    local errorMessage = loader.thread:getError()
     assert(not errorMessage, errorMessage)
 
     local data, resource
     for name,kind in pairs(resourceKinds) do
-      data = getFromThread(thread, kind.resourceKey)
+      local channel = love.thread.getChannel(CHANNEL_PREFIX .. kind.resourceKey)
+      data = channel:pop()
       if data then
         resource = kind.postProcess and kind.postProcess(data, resourceBeingLoaded) or data
         resourceBeingLoaded.holder[resourceBeingLoaded.key] = resource
@@ -110,15 +107,16 @@ else
     end
   end
 
-  local function requestNewResourceToThread(thread)
+  local function requestNewResourceToThread()
     resourceBeingLoaded = shift(pending)
     local requestKey = resourceKinds[resourceBeingLoaded.kind].requestKey
-    setInThread(thread, requestKey, resourceBeingLoaded.requestParam)
+    local channel = love.thread.getChannel(CHANNEL_PREFIX .. requestKey)
+    channel:push(resourceBeingLoaded.requestParam)
   end
 
-  local function endThreadIfAllLoaded(thread)
+  local function endThreadIfAllLoaded()
     if not resourceBeingLoaded and #pending == 0 then
-      setInThread(thread,"done",true)
+      love.thread.getChannel(CHANNEL_PREFIX .. "is_done"):push(true)
       callbacks.allLoaded()
     end
   end
@@ -148,21 +146,21 @@ else
     callbacks.allLoaded = allLoadedCallback or function() end
     callbacks.oneLoaded = oneLoadedCallback or function() end
 
-    local thread = love.thread.newThread("loader", pathToThisFile)
+    local thread = love.thread.newThread(pathToThisFile)
 
     loader.loadedCount = 0
     loader.resourceCount = #pending
-    thread:start()
+    thread:start(true)
+    loader.thread = thread
   end
 
   function loader.update()
-    local thread = love.thread.getThread("loader")
-    if thread then
+    if loader.thread and loader.thread:isRunning() then
       if resourceBeingLoaded then
-        getResourceFromThreadIfAvailable(thread)
-        endThreadIfAllLoaded(thread)
+        getResourceFromThreadIfAvailable()
+        endThreadIfAllLoaded()
       elseif #pending > 0 then
-        requestNewResourceToThread(thread)
+        requestNewResourceToThread()
       end
     end
   end
