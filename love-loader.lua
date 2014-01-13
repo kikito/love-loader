@@ -107,7 +107,7 @@ else
 
   local function newResource(kind, holder, key, ...)
     pending[#pending + 1] = {
-      kind = kind, holder = holder, key = key, requestParams = {requestParams}
+      kind = kind, holder = holder, key = key, requestParams = {...}
     }
   end
 
