@@ -112,9 +112,6 @@ else
   end
 
   local function getResourceFromThreadIfAvailable()
-    local errorMessage = loader.thread:getError()
-    assert(not errorMessage, errorMessage)
-
     local data, resource
     for name,kind in pairs(resourceKinds) do
       local channel = love.thread.getChannel(CHANNEL_PREFIX .. kind.resourceKey)
@@ -176,12 +173,17 @@ else
   end
 
   function loader.update()
-    if loader.thread and loader.thread:isRunning() then
-      if resourceBeingLoaded then
-        getResourceFromThreadIfAvailable()
-        endThreadIfAllLoaded()
-      elseif #pending > 0 then
-        requestNewResourceToThread()
+    if loader.thread then
+      if loader.thread:isRunning() then
+        if resourceBeingLoaded then
+          getResourceFromThreadIfAvailable()
+          endThreadIfAllLoaded()
+        elseif #pending > 0 then
+          requestNewResourceToThread()
+        end
+      else
+        local errorMessage = loader.thread:getError()
+        assert(not errorMessage, errorMessage)
       end
     end
   end
