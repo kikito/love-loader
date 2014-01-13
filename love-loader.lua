@@ -177,9 +177,10 @@ else
       if loader.thread:isRunning() then
         if resourceBeingLoaded then
           getResourceFromThreadIfAvailable()
-          endThreadIfAllLoaded()
         elseif #pending > 0 then
           requestNewResourceToThread()
+        else
+          endThreadIfAllLoaded()
         end
       else
         local errorMessage = loader.thread:getError()
