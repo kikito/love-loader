@@ -49,6 +49,17 @@ local resourceKinds = {
       return love.audio.newSource(path)
     end
   },
+  font = {
+    requestKey  = "fontPath",
+    resourceKey = "fontData",
+    constructor = function(path)
+      return love.filesystem.newFileData(path)
+    end,
+    postProcess = function(data, resource)
+      local path, size = unpack(resource.requestParams)
+      return love.graphics.newFont(data, size)
+    end
+  },
   stream = {
     requestKey  = "streamPath",
     resourceKey = "stream",
@@ -144,6 +155,10 @@ else
 
   function loader.newImage(holder, key, path)
     newResource('image', holder, key, path)
+  end
+
+  function loader.newFont(holder, key, path, size)
+    newResource('font', holder, key, path, size)
   end
 
   function loader.newSource(holder, key, path, sourceType)
