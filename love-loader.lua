@@ -38,8 +38,8 @@ local resourceKinds = {
     requestKey  = "imagePath",
     resourceKey = "imageData",
     constructor = function(path)
-			return love.image.newImageData(love.filesystem.newFileData(path))
-		end,
+        return love.image.newImageData(love.filesystem.newFileData(path))
+    end,
     postProcess = function(data)
       return love.graphics.newImage(data)
     end
