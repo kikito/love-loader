@@ -93,7 +93,7 @@ if loaded == true then
   end
 
 else
-
+  local alreadyCalled = false
   local pending = {}
   local callbacks = {}
   local resourceBeingLoaded
@@ -160,7 +160,7 @@ else
   end
 
   function loader.start(allLoadedCallback, oneLoadedCallback)
-
+    alreadyCalled = false
     callbacks.allLoaded = allLoadedCallback or function() end
     callbacks.oneLoaded = oneLoadedCallback or function() end
 
@@ -179,7 +179,8 @@ else
           getResourceFromThreadIfAvailable()
         elseif #pending > 0 then
           requestNewResourceToThread()
-        else
+        elseif not alreadyCalled then
+          alreadyCalled = true
           endThreadIfAllLoaded()
         end
       else
