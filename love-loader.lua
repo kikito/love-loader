@@ -98,8 +98,7 @@ else
   local callbacks = {}
   local resourceBeingLoaded
 
-  local separator = _G.package.config:sub(1,1)
-  local pathToThisFile = (...):gsub("%.", separator) .. ".lua"
+  local pathToThisFile = (...):gsub("%.", "/") .. ".lua"
 
   local function shift(t)
     return table.remove(t,1)
