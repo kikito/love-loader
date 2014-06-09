@@ -75,11 +75,6 @@ Interface
   resources to be loaded. It can be used in conjunction with
   `loader.loadedCount` to show progressbars etc.
 
-Gotchas / Warnings
-==================
-
-* Font loading is not implemented yet.
-
 Installation
 ============
 

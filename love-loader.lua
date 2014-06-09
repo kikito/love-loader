@@ -4,8 +4,8 @@ require "love.audio"
 require "love.sound"
 
 local loader = {
-  _VERSION     = 'love-loader v2.0.1',
-  _DESCRIPTION = 'Object Orientation for Lua',
+  _VERSION     = 'love-loader v2.0.2',
+  _DESCRIPTION = 'Threaded resource loading for LÖVE',
   _URL         = 'https://github.com/kikito/love-loader',
   _LICENSE     = [[
     MIT LICENSE
