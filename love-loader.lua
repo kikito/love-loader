@@ -53,6 +53,9 @@ local resourceKinds = {
     requestKey  = "fontPath",
     resourceKey = "fontData",
     constructor = function(path)
+      -- we don't use love.filesystem.newFileData directly here because there
+      -- are actually two arguments passed to this constructor which in turn
+      -- invokes the wrong love.filesystem.newFileData overload
       return love.filesystem.newFileData(path)
     end,
     postProcess = function(data, resource)
