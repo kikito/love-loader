@@ -4,7 +4,7 @@ require "love.audio"
 require "love.sound"
 
 local loader = {
-  _VERSION     = 'love-loader v2.0.0',
+  _VERSION     = 'love-loader v2.0.1',
   _DESCRIPTION = 'Object Orientation for Lua',
   _URL         = 'https://github.com/kikito/love-loader',
   _LICENSE     = [[
@@ -112,8 +112,7 @@ else
   local callbacks = {}
   local resourceBeingLoaded
 
-  local separator = _G.package.config:sub(1,1)
-  local pathToThisFile = (...):gsub("%.", separator) .. ".lua"
+  local pathToThisFile = (...):gsub("%.", "/") .. ".lua"
 
   local function shift(t)
     return table.remove(t,1)
