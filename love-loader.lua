@@ -1,8 +1,3 @@
-require "love.filesystem"
-require "love.image"
-require "love.audio"
-require "love.sound"
-
 local loader = {
   _VERSION     = 'love-loader v2.0.2',
   _DESCRIPTION = 'Threaded resource loading for LÖVE',
@@ -42,12 +37,10 @@ local resourceKinds = {
       return love.graphics.newImage(data)
     end
   },
-  source = {
-    requestKey  = "sourcePath",
-    resourceKey = "source",
-    constructor = function(path)
-      return love.audio.newSource(path)
-    end
+  imageData = {
+    requestKey  = "imageDataPath",
+    resourceKey = "rawImageData",
+    constructor = love.image.newImageData
   },
   font = {
     requestKey  = "fontPath",
@@ -63,6 +56,13 @@ local resourceKinds = {
       return love.graphics.newFont(data, size)
     end
   },
+  source = {
+    requestKey  = "sourcePath",
+    resourceKey = "source",
+    constructor = function(path)
+      return love.audio.newSource(path)
+    end
+  },
   stream = {
     requestKey  = "streamPath",
     resourceKey = "stream",
@@ -74,11 +74,6 @@ local resourceKinds = {
     requestKey  = "soundDataPathOrDecoder",
     resourceKey = "soundData",
     constructor = love.sound.newSoundData
-  },
-  imageData = {
-    requestKey  = "imageDataPath",
-    resourceKey = "rawImageData",
-    constructor = love.image.newImageData
   }
 }
 
@@ -86,6 +81,11 @@ local CHANNEL_PREFIX = "loader_"
 
 local loaded = ...
 if loaded == true then
+  require "love.filesystem"
+  require "love.image"
+  require "love.audio"
+  require "love.sound"
+
   local requestParams, resource
   local done = false
 
@@ -155,25 +155,33 @@ else
 
   -----------------------------------------------------
 
-  function loader.newImage(holder, key, path)
-    newResource('image', holder, key, path)
+  if love.graphics then
+    if love.image then
+      function loader.newImage(holder, key, path)
+        newResource('image', holder, key, path)
+      end
+  
+      function loader.newImageData(holder, key, path)
+        newResource('imageData', holder, key, path)
+      end
+    end
+
+    function loader.newFont(holder, key, path, size)
+      newResource('font', holder, key, path, size)
+    end
   end
 
-  function loader.newFont(holder, key, path, size)
-    newResource('font', holder, key, path, size)
+  if love.audio then
+    function loader.newSource(holder, key, path, sourceType)
+      local kind = (sourceType == 'stream' and 'stream' or 'source')
+      newResource(kind, holder, key, path)
+    end
   end
 
-  function loader.newSource(holder, key, path, sourceType)
-    local kind = (sourceType == 'stream' and 'stream' or 'source')
-    newResource(kind, holder, key, path)
-  end
-
-  function loader.newSoundData(holder, key, pathOrDecoder)
-    newResource('soundData', holder, key, pathOrDecoder)
-  end
-
-  function loader.newImageData(holder, key, path)
-    newResource('imageData', holder, key, path)
+  if love.sound then
+    function loader.newSoundData(holder, key, pathOrDecoder)
+      newResource('soundData', holder, key, pathOrDecoder)
+    end
   end
 
   function loader.start(allLoadedCallback, oneLoadedCallback)
