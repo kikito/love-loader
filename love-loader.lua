@@ -63,6 +63,18 @@ local resourceKinds = {
       return love.graphics.newFont(data, size)
     end
   },
+  BMFont = {
+    requestKey  = "fontPath",
+    resourceKey = "fontData",
+    constructor = function(path)
+      return love.filesystem.newFileData(path)
+    end,
+    postProcess = function(data, resource)
+      local imagePath, glyphsPath  = unpack(resource.requestParams)
+      local glyphs = love.filesystem.newFileData(glyphsPath)
+      return love.graphics.newFont(glyphs,data)
+    end
+  },
   stream = {
     requestKey  = "streamPath",
     resourceKey = "stream",
@@ -161,6 +173,10 @@ else
 
   function loader.newFont(holder, key, path, size)
     newResource('font', holder, key, path, size)
+  end
+
+  function loader.newBMFont(holder, key, path, glyphsPath)
+    newResource('font', holder, key, path, glyphsPath)
   end
 
   function loader.newSource(holder, key, path, sourceType)
