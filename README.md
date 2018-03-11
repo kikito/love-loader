@@ -12,6 +12,13 @@ blocking calls dropping the framerate.
 Version 2.0.0 of this lib only works with LÖVE 0.9.x. If you need to
 work with LÖVE 0.8 or before, please use earlier versions of this lib.
 
+Deprecated and Unmaintained
+===========================
+
+This project is now *deprecated and unmaintained*. It has not been kept
+up to date with latest versions of LÖVE and will probably not work with
+them. If you wish to adopt it, please open an issue on the issue tracker.
+
 Example
 =======
 
