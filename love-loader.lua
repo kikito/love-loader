@@ -198,6 +198,7 @@ else
           requestNewResourceToThread()
         else
           endThreadIfAllLoaded()
+          loader.thread = nil
         end
       else
         local errorMessage = loader.thread:getError()
