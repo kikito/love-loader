@@ -42,11 +42,11 @@ local resourceKinds = {
       return love.graphics.newImage(data)
     end
   },
-  source = {
-    requestKey  = "sourcePath",
-    resourceKey = "source",
+  staticSource = {
+    requestKey  = "staticPath",
+    resourceKey = "staticSource",
     constructor = function(path)
-      return love.audio.newSource(path)
+      return love.audio.newSource(path, "static")
     end
   },
   font = {
@@ -75,9 +75,9 @@ local resourceKinds = {
       return love.graphics.newFont(glyphs,data)
     end
   },
-  stream = {
+  streamSource = {
     requestKey  = "streamPath",
-    resourceKey = "stream",
+    resourceKey = "streamSource",
     constructor = function(path)
       return love.audio.newSource(path, "stream")
     end
@@ -180,7 +180,7 @@ else
   end
 
   function loader.newSource(holder, key, path, sourceType)
-    local kind = (sourceType == 'stream' and 'stream' or 'source')
+    local kind = (sourceType == 'static' and 'staticSource' or 'streamSource')
     newResource(kind, holder, key, path)
   end
 
