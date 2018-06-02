@@ -27,7 +27,7 @@ local finishedLoading = false
 
 function love.load()
   loader.newImage(  images, 'rabbit', 'path/to/rabbit.png')
-  loader.newSource( sounds, 'iiiik',  'path/to/iiik.ogg')
+  loader.newSource( sounds, 'iiiik',  'path/to/iiik.ogg', 'static')
   loader.newSource( sounds, 'music',  'path/to/music.ogg', 'stream')
 
   loader.start(function()
