@@ -37,7 +37,13 @@ local resourceKinds = {
   image = {
     requestKey  = "imagePath",
     resourceKey = "imageData",
-    constructor = love.image.newImageData,
+    constructor = function (path)
+      if love.image.isCompressed(path) then
+        return love.image.newCompressedData(path)
+      else
+        return love.image.newImageData(path)
+      end
+    end,
     postProcess = function(data)
       return love.graphics.newImage(data)
     end
@@ -91,6 +97,11 @@ local resourceKinds = {
     requestKey  = "imageDataPath",
     resourceKey = "rawImageData",
     constructor = love.image.newImageData
+  },
+  compressedData = {
+    requestKey  = "compressedDataPath",
+    resourceKey = "rawCompressedData",
+    constructor = love.image.newCompressedData
   }
 }
 
@@ -190,6 +201,10 @@ else
 
   function loader.newImageData(holder, key, path)
     newResource('imageData', holder, key, path)
+  end
+  
+  function loader.newCompressedData(holder, key, path)
+    newResource('compressedData', holder, key, path)
   end
 
   function loader.start(allLoadedCallback, oneLoadedCallback)
