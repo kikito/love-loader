@@ -70,8 +70,8 @@ local resourceKinds = {
     end
   },
   BMFont = {
-    requestKey  = "fontPath",
-    resourceKey = "fontData",
+    requestKey  = "fontBMPath",
+    resourceKey = "fontBMData",
     constructor = function(path)
       return love.filesystem.newFileData(path)
     end,
