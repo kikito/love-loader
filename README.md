@@ -62,7 +62,7 @@ Interface
 * `loader.newImage(holder, key, path)`. Adds a new image to the list
   of images to load.
 * `loader.newSource(holder, key, path, sourceType)`. Adds a new source
-  to the list of images to load.
+  to the list of sources to load.
 * `loader.newFont(holder, key, path)`. Adds a new font to the list of
   fonts to load.
 * `loader.start(finishCallback, loadedCallback)`. Starts doing the
