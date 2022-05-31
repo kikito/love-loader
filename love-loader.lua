@@ -135,7 +135,7 @@ else
   local callbacks = {}
   local resourceBeingLoaded
 
-  local pathToThisFile = (...):gsub("%.", "/") .. ".lua"
+  local pathToThisFile = debug.getinfo(1).source:match("@?(.*)")
 
   local function shift(t)
     return table.remove(t,1)
