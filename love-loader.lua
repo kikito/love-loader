@@ -102,6 +102,11 @@ local resourceKinds = {
     requestKey  = "compressedDataPath",
     resourceKey = "rawCompressedData",
     constructor = love.image.newCompressedData
+  },
+  textData = {
+    requestKey  = "rawDataPath",
+    resourceKey = "rawData",
+    constructor = love.filesystem.read
   }
 }
 
@@ -205,6 +210,10 @@ else
   
   function loader.newCompressedData(holder, key, path)
     newResource('compressedData', holder, key, path)
+  end
+
+  function loader.read(holder, key, path)
+    newResource('rawData', holder, key, path)
   end
 
   function loader.start(allLoadedCallback, oneLoadedCallback)
