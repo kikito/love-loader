@@ -253,5 +253,9 @@ else
 		end
 	end
 
+	function loader.wait()
+		if loader.thread then loader.thread:wait() end
+	end
+
 	return loader
 end
