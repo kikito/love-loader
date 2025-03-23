@@ -103,7 +103,7 @@ local resourceKinds = {
 		resourceKey = "rawCompressedData",
 		constructor = love.image.newCompressedData
 	},
-	textData = {
+	rawData = {
 		requestKey  = "rawDataPath",
 		resourceKey = "rawData",
 		constructor = love.filesystem.read
