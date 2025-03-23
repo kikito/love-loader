@@ -257,5 +257,11 @@ else
 		if loader.thread then loader.thread:wait() end
 	end
 
+	---This function is only intended to be called inside of love.quit()
+	---Use only if you know the risks of chrashes.
+	function loader.cancel()
+		love.thread.getChannel(CHANNEL_PREFIX .. "is_done"):push(true)
+	end
+
 	return loader
 end
