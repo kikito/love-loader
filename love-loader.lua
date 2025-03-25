@@ -141,6 +141,9 @@ else
   local resourceBeingLoaded
 
   local pathToThisFile = (...):gsub("%.", "/") .. ".lua"
+  if love.filesystem.getInfo(pathToThisFile) == nil and type(debug) == "table" and type(debug.getinfo) == "function" then
+    pathToThisFile = debug.getinfo(1).source:match("@?(.*)")
+  end
 
   local function shift(t)
     return table.remove(t,1)
