@@ -103,11 +103,16 @@ local resourceKinds = {
     resourceKey = "rawCompressedData",
     constructor = love.image.newCompressedData
   },
-  textData = {
+  rawData = {
     requestKey  = "rawDataPath",
     resourceKey = "rawData",
     constructor = love.filesystem.read
-  }
+  },
+  video = {
+		requestKey  = "videoDataPath",
+		resourceKey = "video",
+		constructor = love.graphics.newVideo
+	}
 }
 
 local CHANNEL_PREFIX = "loader_"
@@ -210,7 +215,7 @@ else
   function loader.newImageData(holder, key, path)
     newResource('imageData', holder, key, path)
   end
-  
+
   function loader.newCompressedData(holder, key, path)
     newResource('compressedData', holder, key, path)
   end
