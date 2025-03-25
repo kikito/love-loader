@@ -224,6 +224,10 @@ else
     newResource('rawData', holder, key, path)
   end
 
+  function loader.newVideo(holder, key, path)
+    newResource('video', holder, key, path)
+  end
+
   function loader.start(allLoadedCallback, oneLoadedCallback)
 
     callbacks.allLoaded = allLoadedCallback or function() end
@@ -253,6 +257,14 @@ else
         assert(not errorMessage, errorMessage)
       end
     end
+  end
+
+  function loader.wait()
+    if loader.thread then
+      loader.thread:wait()
+      return true
+    end
+    return false
   end
 
   return loader
