@@ -255,5 +255,13 @@ else
     end
   end
 
+  function loader.wait()
+    if loader.thread then
+      loader.thread:wait()
+      return true
+    end
+    return false
+  end
+
   return loader
 end
