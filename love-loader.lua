@@ -107,7 +107,12 @@ local resourceKinds = {
     requestKey  = "rawDataPath",
     resourceKey = "rawData",
     constructor = love.filesystem.read
-  }
+  },
+  video = {
+		requestKey  = "videoDataPath",
+		resourceKey = "video",
+		constructor = love.graphics.newVideo
+	}
 }
 
 local CHANNEL_PREFIX = "loader_"
