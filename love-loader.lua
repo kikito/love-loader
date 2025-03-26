@@ -198,8 +198,9 @@ else
   ---@field allLoaded function
   ---@field oneLoaded function
 
-  -- LuaLS gets happy when this is prepopulated with a table that has the allLoaded and oneLoaded functions. --
+  -- LuaLS gets happy when this is prepopulated with a table that has the allLoaded and oneLoaded functions.
   -- It's honestly for the best.
+
   ---@type CallbackHolder
   local callbacks = {
     allLoaded = function() end,
