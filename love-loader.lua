@@ -237,7 +237,7 @@ else
 
   local function getResourceFromThreadIfAvailable()
     local data, resource
-    for name, kind in pairs(resourceKinds) do
+    for _, kind in pairs(resourceKinds) do
       local channel = love.thread.getChannel(CHANNEL_PREFIX .. kind.resourceKey)
       data = channel:pop()
       if data then
