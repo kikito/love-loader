@@ -250,6 +250,8 @@ else
     end
   end
 
+  --- Sends resorce request to the aplicable request Thread channel.
+  ---@return nil
   local function requestNewResourceToThread()
     resourceBeingLoaded = shift(pending)
     local requestKey = resourceKinds[resourceBeingLoaded.kind].requestKey
