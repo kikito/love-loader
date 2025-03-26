@@ -188,7 +188,8 @@ if loaded == true then
   end
 
 else
-
+  --- Holds the pending resource requests.
+  ---@type table<integer, ResourceRequest>
   local pending = {}
 
   ---@class CallbackHolder
@@ -202,6 +203,9 @@ else
     allLoaded = function() end,
     oneLoaded = function() end
   }
+
+  --- Holds the current resource being loaded.
+  ---@type ResourceRequest?
   local resourceBeingLoaded
 
   --- Expected to have the filename path of this file in order to read itself
@@ -223,6 +227,12 @@ else
     return table.remove(t, 1)
   end
 
+  ---@class ResourceRequest
+  ---@field kind ResourceKind What constructor to use to create the resource.
+  ---@field holder table What table to store the resource in.
+  ---@field key string What key to use to store the resource in the table.
+  ---@field requestParams any[] Additional parameters to pass to the constructor.
+
   --- Macro used to add a resource to the pending list.
   ---@param kind ResourceKind What constructor to use to create the resource.
   ---@param holder table What table to store the resource in.
@@ -230,11 +240,14 @@ else
   ---@param ...? any Additional parameters to pass to the constructor.
   ---@return nil
   local function newResource(kind, holder, key, ...)
+    ---@type ResourceRequest
     pending[#pending + 1] = {
       kind = kind, holder = holder, key = key, requestParams = {...}
     }
   end
 
+  --- Gets the resource that the worker thread has loaded, if it's available.
+  ---@return nil
   local function getResourceFromThreadIfAvailable()
     local data, resource
     for _, kind in pairs(resourceKinds) do
@@ -242,8 +255,10 @@ else
       data = channel:pop()
       if data then
         resource = kind.postProcess and kind.postProcess(data, resourceBeingLoaded) or data
+        ---@diagnostic disable-next-line: need-check-nil
         resourceBeingLoaded.holder[resourceBeingLoaded.key] = resource
         loader.loadedCount = loader.loadedCount + 1
+        ---@diagnostic disable-next-line: need-check-nil
         callbacks.oneLoaded(resourceBeingLoaded.kind, resourceBeingLoaded.holder, resourceBeingLoaded.key)
         resourceBeingLoaded = nil
       end
