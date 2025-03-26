@@ -29,6 +29,8 @@ require "love.sound"
 ---@field thread? love.Thread
 
 -- Due to the if statement LuaLS will think that the fields are missing.
+
+--- love-loader: Threaded resource loading for LÖVE
 ---@type LoveLoader
 ---@diagnostic disable-next-line: missing-fields
 local loader = {
