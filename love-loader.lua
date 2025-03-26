@@ -62,16 +62,16 @@ local loader = {
 }
 
 
----@alias ResourceKind string   # The kind of resource to load
----| "newImage" string          # Load an Image
----| "newFont" string           # Load a Font
----| "newBMFont" string         # Load a Bitmap Font
----| "newSource" string         # Load a Source
----| "newSoundData" string      # Load a SoundData
----| "newImageData" string      # Load an ImageData
----| "newCompressedData" string # Load a CompressedData
----| "rawData" string           # Load raw text data
----| "newVideo" string          # Load a Video
+---@alias ResourceKind string
+---| "newImage"                 # Load an Image
+---| "newFont"                  # Load a Font
+---| "newBMFont"                # Load a Bitmap Font
+---| "newSource"                # Load a Source
+---| "newSoundData"             # Load a SoundData
+---| "newImageData"             # Load an ImageData
+---| "newCompressedData"        # Load a CompressedData
+---| "rawData"                  # Load raw text data
+---| "newVideo"                 # Load a Video
 
 ---@class ResourceKindConstructor
 ---@field requestKey string
@@ -190,18 +190,45 @@ if loaded == true then
 else
 
   local pending = {}
-  local callbacks = {}
+
+  ---@class CallbackHolder
+  ---@field allLoaded function
+  ---@field oneLoaded function
+
+  -- LuaLS gets happy when this is prepopulated with a table that has the allLoaded and oneLoaded functions. --
+  -- It's honestly for the best.
+  ---@type CallbackHolder
+  local callbacks = {
+    allLoaded = function() end,
+    oneLoaded = function() end
+  }
   local resourceBeingLoaded
 
+  --- Expected to have the filename path of this file in order to read itself
+  --- to dispatch a worker thread to load the resources.
+  ---
+  --- **Failing to find itself will result on a crash if** `loader.start` **gets called.**
+  ---@type string
   local pathToThisFile = (...):gsub("%.", "/") .. ".lua"
+
   if love.filesystem.getInfo(pathToThisFile) == nil and type(debug) == "table" and type(debug.getinfo) == "function" then
     pathToThisFile = debug.getinfo(1).source:match("@?(.*)")
   end
 
+  --- Removes the first item from the table.
+  --- Returns the removed item.
+  ---@param t table The table to remove the first item from.
+  ---@return any
   local function shift(t)
-    return table.remove(t,1)
+    return table.remove(t, 1)
   end
 
+  --- Macro used to add a resource to the pending list.
+  ---@param kind ResourceKind What constructor to use to create the resource.
+  ---@param holder table What table to store the resource in.
+  ---@param key string What key to use to store the resource in the table.
+  ---@param ...? any Additional parameters to pass to the constructor.
+  ---@return nil
   local function newResource(kind, holder, key, ...)
     pending[#pending + 1] = {
       kind = kind, holder = holder, key = key, requestParams = {...}
@@ -210,7 +237,7 @@ else
 
   local function getResourceFromThreadIfAvailable()
     local data, resource
-    for name,kind in pairs(resourceKinds) do
+    for name, kind in pairs(resourceKinds) do
       local channel = love.thread.getChannel(CHANNEL_PREFIX .. kind.resourceKey)
       data = channel:pop()
       if data then
@@ -230,6 +257,9 @@ else
     channel:push(resourceBeingLoaded.requestParams)
   end
 
+  --- Tells to the worker thread that it can safely break from
+  --- it's loop and terminate it's execution when there's no more resources to load.
+  ---@return nil
   local function endThreadIfAllLoaded()
     if not resourceBeingLoaded and #pending == 0 then
       love.thread.getChannel(CHANNEL_PREFIX .. "is_done"):push(true)
@@ -237,7 +267,9 @@ else
     end
   end
 
-  -----------------------------------------------------
+  -- ----------------------------------------------- --
+  -- PUBLIC API                                      --
+  -- ----------------------------------------------- --
 
   --- Loads a Image.
   ---@see love.graphics.newImage
@@ -339,7 +371,7 @@ else
     loader.thread = thread
   end
 
-  --- Check the state of the worker thread.
+  --- Checks the state of the worker thread.
   --- - It makes sure that the worker thread is running, raises an error if applicable.
   --- - Transfers asset pointers to the main thread.
   --- - It doesn't use delta time to function.
