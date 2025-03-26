@@ -239,7 +239,8 @@ else
 
   -----------------------------------------------------
 
-  --- Loads a Image
+  --- Loads a Image.
+  ---@see love.graphics.newImage
   ---@param holder table The table where the image will be stored.
   ---@param key string The key to store the image under.
   ---@param path string The path to the image file.
@@ -248,7 +249,8 @@ else
     newResource('image', holder, key, path)
   end
 
-  --- Loads a Font
+  --- Loads a Font.
+  ---@see love.graphics.newFont
   ---@param holder table The table where the font will be stored.
   ---@param key string The key to store the font under.
   ---@param path string The path to the font file.
@@ -258,7 +260,8 @@ else
     newResource('font', holder, key, path, size)
   end
 
-  --- Loads a Bitmap Font
+  --- Loads a Bitmap Font.
+  ---@see love.graphics.newFont
   ---@param holder table The table where the font will be stored.
   ---@param key string The key to store the font under.
   ---@param path string The path to the font file.
@@ -268,7 +271,8 @@ else
     newResource('font', holder, key, path, glyphsPath)
   end
 
-  --- Loads an audio source
+  --- Loads an audio source.
+  ---@see love.audio.newSource
   ---@param holder table The table where the audio source will be stored.
   ---@param key string The key to store the audio source under.
   ---@param path string The path to the audio file.
@@ -279,7 +283,8 @@ else
     newResource(kind, holder, key, path)
   end
 
-  --- Loads a sound as a raw SoundData object
+  --- Loads a sound as a raw SoundData object.
+  ---@see love.sound.newSoundData
   ---@param holder table The table where the sound will be stored.
   ---@param key string The key to store the sound under.
   ---@param pathOrDecoder? any The path to the sound file or a decoder function.
@@ -287,7 +292,8 @@ else
     newResource('soundData', holder, key, pathOrDecoder)
   end
 
-  --- Loads an image as an raw ImageData object
+  --- Loads an image as an raw ImageData object.
+  ---@see love.image.newImageData
   ---@param holder table The table where the imageData will be stored.
   ---@param key string The key to store the imageData under.
   ---@param path string The path to the image file.
@@ -296,7 +302,8 @@ else
     newResource('imageData', holder, key, path)
   end
 
-  --- Loads a newCompressedData from an image
+  --- Loads a newCompressedData from an image.
+  ---@see love.image.newCompressedData
   ---@param holder table The table where the compressedData will be stored.
   ---@param key string The key to store the compressedData under.
   ---@param path string The path to the image file.
@@ -306,6 +313,7 @@ else
   end
 
   --- Useful to read raw data, such as text.
+  ---@see love.filesystem.read
   ---@param holder table The table where the rawData will be stored.
   ---@param key string The key to store the rawData under.
   ---@param path string The path to the file.
