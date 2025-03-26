@@ -224,6 +224,10 @@ else
     newResource('rawData', holder, key, path)
   end
 
+  function loader.newVideo(holder, key, path)
+    newResource('video', holder, key, path)
+  end
+
   function loader.start(allLoadedCallback, oneLoadedCallback)
 
     callbacks.allLoaded = allLoadedCallback or function() end
